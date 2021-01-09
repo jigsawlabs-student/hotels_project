@@ -3,7 +3,7 @@ import api.src.db as db
 import api.src.adapters as adapters
 import psycopg2
 
-
+# Let's see if this work
 class Builder:
     def run(self, hotel_details, conn, cursor):
         amadeus_id = hotel_details['hotel']['hotelId']

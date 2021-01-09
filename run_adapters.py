@@ -1,36 +1,42 @@
 import psycopg2
+import pandas
+from datetime import date, timedelta
 import api.src.models as models
 import api.src.db as db
 import api.src.adapters as adapters
 
 
+# Create string of hotel ID's to call from API:
+def hotel_ids_str():
+    with open ('hotel_list_dev.csv') as csvfile:
+        df = pandas.read_csv(csvfile, header=0)
+        ids = df.id.to_string(index=False, header=False).split('\n')
+        ids_str = ",".join(ids).replace(" ","")
+        return ids_str   
 
+# 
 class RequestAndBuild:
     def __init__(self):
         self.client = adapters.HotelClient()
         self.builder = adapters.Builder()
         self.conn = psycopg2.connect(database='hotels_development')
         self.cursor = self.conn.cursor()
-        self.hotel_list = 'TILONRHO' #BGMILBGB,
+        self.hotel_list = hotel_ids_str()
        
     def run(self):
-        hotel_details = self.client.request_offers(self.hotel_list) # PUT IN MULTIPLE HOTELS VIA self.hotel_list >>
-        for hotel_detail in hotel_details:
-            hotel_obj = self.builder.run(hotel_detail, self.conn, self.cursor)
-            return hotel_obj
+        print(self.hotel_list)
         
-        # for hotel in hotel_list:
-        # location = adapters.LocationBuilder().run(hotel_details[hotel], self.conn, self.cursor) 
-        # hotel = adapters.HotelBuilder().run(hotel_details[hotel], location, self.conn, self.cursor)
-        # offer = adapters.OfferBuilder().run(hotel_details[hotel], hotel, self.conn, self.cursor)
-
-        # hotel_amadeus_ids = [hotel['amadeus_id'] for hotel in hotels]
-        # hotel_objs = []
-        # for amadeus_id in hotel_amadeus_ids:
-        #     hotel_details = self.client.request_offers(amadeus_id)
-        #     hotel_obj = self.hotelbuilder.run(hotel_details, self.conn, self.cursor)
-        #     hotel_objs.append(hotel_obj)
-        # return hotel_objs
-
+        hotel_objs = []
+        for i in range(10):
+            check_in = date.today() + timedelta(days=i)
+            check_out = check_in + timedelta(days=1)
+            print(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d"))
+            hotel_details = self.client.request_offers(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d")) # NEEDS ERROR HANDLING IF A HOTEL COMES BACK 400 - LOGGING?            
+            for hotel_detail in hotel_details:
+                print(hotel_detail['hotel']['name'])
+                hotel_obj = self.builder.run(hotel_detail, self.conn, self.cursor)
+                hotel_objs.append(hotel_obj)
+        return hotel_objs
+        
 obj = RequestAndBuild()
 obj.run()

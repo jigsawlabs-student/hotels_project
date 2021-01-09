@@ -3,7 +3,7 @@ import api.src.db as db
 import api.src.adapters as adapters
 import psycopg2
 
-# Let's see if this work
+
 class Builder:
     def run(self, hotel_details, conn, cursor):
         amadeus_id = hotel_details['hotel']['hotelId']
@@ -13,7 +13,7 @@ class Builder:
             offer = OfferBuilder().run(hotel_details, hotel_obj, conn, cursor)
             offer.hotel_id = hotel_obj.id
             saved_offer = db.save(offer, conn, cursor)
-            return {'hotel': hotel_obj, 'location': hotel_obj.location_id, 'offer': saved_offer} # .location method - relationship query method 
+            return {'hotel': hotel_obj, 'location': hotel_obj.location_id, 'offer': saved_offer} # LOCATION METHOD - RELATIONSHIP QUERY METHOD
 
         else:
             # run location, save location
@@ -48,8 +48,8 @@ class HotelBuilder:
             return hotel
         else:
             hotel_obj = models.Hotel(**selected)
-            hotel.exists = False
-            return hotel
+            # hotel_obj.exists = False
+            return hotel_obj
 
 
 # class ChainBuilder:

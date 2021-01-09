@@ -1,3 +1,6 @@
 api/src/adapters/client.py
-.jigsaw_models
-.hotel_gds_export_prd
+jigsaw_models.xlsx
+hotel_gds_export_prd.csv
+hotel_list_prod.csv
+hotel_list_dev.csv
+hotel_list_dev copy.csv

@@ -18,3 +18,5 @@ class Chain:
         cursor.execute(hotels_query, (amadeus_id, ))
         record = cursor.fetchone()
         return db.build_from_record(models.Hotel, record)
+
+    

@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import datetime
+import plotly.graph_objects as go
 API_URL = "http://127.0.0.1:5000/"
 
 
@@ -22,7 +23,7 @@ def find_offers():
     return response
 
 #Page Header
-st.title('Map of Hotels')
+# st.title('Map of Hotels')
 
 #Sidebar Price Selector
 price = st.sidebar.slider(min_value = 300, max_value = 2000, step = 100, label = 'Maximum Price (Per Night)')
@@ -43,14 +44,14 @@ if check_in >= check_out:
 
 
 
-data = pd.DataFrame(
-    find_locations()
-)
-st.map(data)
+# data = pd.DataFrame(
+#     find_locations()
+# )
+# st.map(data)
 
-st.header("Hotel Information")
-offers = pd.DataFrame(
-    find_offers()
-)
-st.table(offers)
+# st.header("Hotel Information")
+# offers = pd.DataFrame(
+#     find_offers()
+# )
+# st.table(offers)
 

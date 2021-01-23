@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS offers (
   currency VARCHAR(255) NOT NULL,
   total_rate DECIMAL NOT NULL, 
   comm_percentage DECIMAL,
+  created_at TIMESTAMP DEFAULT NOW(),
   CONSTRAINT fk_hotel_id
     FOREIGN KEY (hotel_id)
       REFERENCES hotels (id) ON DELETE CASCADE

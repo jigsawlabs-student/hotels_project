@@ -5,16 +5,14 @@ import api.src.models as models
 import api.src.db as db
 import api.src.adapters as adapters
 
-
 # Create string of hotel ID's to call from API:
 def hotel_ids_str():
-    with open ('hotel_list_dev.csv') as csvfile:
+    with open ('hotel_list_prod.csv') as csvfile:
         df = pandas.read_csv(csvfile, header=0)
         ids = df.id.to_string(index=False, header=False).split('\n')
         ids_str = ",".join(ids).replace(" ","")
         return ids_str   
 
-# 
 class RequestAndBuild:
     def __init__(self):
         self.client = adapters.HotelClient()
@@ -23,11 +21,11 @@ class RequestAndBuild:
         self.cursor = self.conn.cursor()
         self.hotel_list = hotel_ids_str()
        
-    def run(self):
+    def run(self, days_out):
         print(self.hotel_list)
         
         hotel_objs = []
-        for i in range(10):
+        for i in range(days_out):
             check_in = date.today() + timedelta(days=i)
             check_out = check_in + timedelta(days=1)
             print(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d"))
@@ -39,4 +37,4 @@ class RequestAndBuild:
         return hotel_objs
         
 obj = RequestAndBuild()
-obj.run()
+obj.run(90)

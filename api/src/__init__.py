@@ -28,15 +28,6 @@ def create_app(database='hotels_development', testing = False, debug = True):
         hotels_dicts = [hotel.__dict__ for hotel in hotels]
         return json.dumps(hotels_dicts, default = str)
 
-    @app.route('/locations')
-    def locations():
-        conn = db.get_db()
-        cursor = conn.cursor()
-
-        locations = db.find_all(models.Location, cursor)
-        locations_dicts = [location.__dict__ for location in locations]
-        return json.dumps(locations_dicts, default = str)
-
     @app.route('/offers')
     def offers():
         conn = db.get_db()
@@ -46,22 +37,30 @@ def create_app(database='hotels_development', testing = False, debug = True):
         offers_dicts = [offer.__dict__ for offer in offers]
         return json.dumps(offers_dicts, default = str)
 
-    @app.route('/chains')
-    def chains():
+    @app.route('/hotels/<id>')
+    def search_offers(id):
         conn = db.get_db()
         cursor = conn.cursor()
+        hotel = db.find(models.Hotel, id, cursor)        
+        return json.dumps(hotel.to_json(cursor), default = str)
 
-        chains = db.find_all(models.Chain, cursor)
-        chains_dicts = [chain.__dict__ for chain in chains]
-        return json.dumps(chains_dicts, default = str)
-
-    @app.route('/descriptions')
-    def descriptions():
+    @app.route('/hotels/<id>/cheapest')
+    def search_offers_cheapest(id):
         conn = db.get_db()
         cursor = conn.cursor()
+        hotel = db.find(models.Hotel, id, cursor)
+        return json.dumps(hotel.to_json_cheapest(cursor), default = str)
 
-        descriptions = db.find_all(models.Description, cursor)
-        descriptions_dicts = [description.__dict__ for description in descriptions]
-        return json.dumps(descriptions_dicts, default = str)
 
     return app
+
+
+
+    # @app.route('/locations')
+    # def locations():
+    #     conn = db.get_db()
+    #     cursor = conn.cursor()
+
+    #     locations = db.find_all(models.Location, cursor)
+    #     locations_dicts = [location.__dict__ for location in locations]
+    #     return json.dumps(locations_dicts, default = str)

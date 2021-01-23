@@ -12,16 +12,45 @@ class Hotel:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    @classmethod
-    def find_by_amadeus_id(self, amadeus_id, cursor):
-        hotels_query = """SELECT * FROM hotels WHERE amadeus_id = %s"""
-        cursor.execute(hotels_query, (amadeus_id, ))
+    def location(self, cursor):
+        location_query = """SELECT * FROM locations WHERE locations.id = %s"""
+        cursor.execute(location_query, (self.location_id,))
         record = cursor.fetchone()
-        return db.build_from_record(models.Hotel, record)
+        return db.build_from_record(models.Location, record)
 
+    def offers(self, cursor):
+        offers_query = """SELECT * FROM offers WHERE offers.hotel_id = %s"""
+        cursor.execute(offers_query, (self.id,))
+        records = cursor.fetchall()
+        return db.build_from_records(models.Offer, records)
 
-    # find by location
-    # find by brand
-    # find cheapest price
-    # find greatest sale relative to average price
+    def cheapest(self, cursor):
+        offers_query = """SELECT * FROM offers WHERE offers.hotel_id = %s ORDER BY total_rate ASC"""
+        cursor.execute(offers_query, (self.id,))
+        records = cursor.fetchall()
+        return db.build_from_records(models.Offer, records)
+
+    def to_json(self, cursor):
+        offers = self.offers(cursor)
+        location = self.location(cursor)
+        hotel_dict = self.__dict__
+        location_dict = location.__dict__
+        offers_dicts = [offer.__dict__ for offer in offers]
+        # location_dicts = [location.__dict__ for location in locations]
+        hotel_dict['location'] = location_dict
+        hotel_dict['offers'] = offers_dicts
+        return hotel_dict
     
+    def to_json_cheapest(self, cursor):
+        offers = self.cheapest(cursor)
+        hotel_dict = self.__dict__
+        offers_dicts = [offer.__dict__ for offer in offers]
+        hotel_dict['offers'] = offers_dicts
+        return hotel_dict
+
+    # @classmethod
+    # def find_by_amadeus_id(self, amadeus_id, cursor):
+#     hotels_query = """SELECT * FROM hotels WHERE amadeus_id = %s"""
+#     cursor.execute(hotels_query, (amadeus_id, ))
+#     record = cursor.fetchone()
+#     return db.build_from_record(models.Hotel, record)

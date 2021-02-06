@@ -1,9 +1,5 @@
 from amadeus import Client, ResponseError
-import requests
 from settings import CLIENT_ID, CLIENT_SECRET
-
-
-# hotel_list = "BGMILBGB" #"BGMILBGB,BGLONBGB"
 
 class HotelClient:
     CLIENT_ID = CLIENT_ID

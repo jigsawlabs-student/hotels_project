@@ -51,26 +51,16 @@ class HotelBuilder:
             # hotel_obj.exists = False
             return hotel_obj
 
-
-# class ChainBuilder:
-#     attributes = ['chain_code', 'name']
-
-#     def select_attributes(self, hotel_details):
-#         chain_code, name = 
-#         return categories
-
-#     def run(self, venue_details, venue, conn, cursor):
-#         category_names = self.select_attributes(venue_details)
-#         categories = self.find_or_create_categories(category_names, conn, cursor)
-#         venue_categories = self.create_venue_categories(venue, categories, conn, cursor)
-#         return venue_categories
-
-
 class LocationBuilder:
     attributes = ['lon', 'lat', 'address', 'city_name', 'postal_code', 'country_code']
 
     def select_attributes(self, hotel_details):
-        lon, lat, address, city_name, postal_code, country_code = hotel_details['hotel']['longitude'], hotel_details['hotel']['latitude'], hotel_details['hotel']['address']['lines'][0], hotel_details['hotel']['address']['cityName'], hotel_details['hotel']['address']['postalCode'], hotel_details['hotel']['address']['countryCode']
+        lon = hotel_details['hotel']['longitude']
+        lat = hotel_details['hotel']['latitude']
+        address = hotel_details['hotel']['address']['lines'][0]
+        city_name = hotel_details['hotel']['address']['cityName']
+        postal_code = hotel_details['hotel']['address'].get('postalCode')
+        country_code = hotel_details['hotel']['address']['countryCode']
         return dict(zip(self.attributes, [lon, lat, address, city_name, postal_code, country_code]))
 
     def run(self, hotel_details, conn, cursor):
@@ -95,3 +85,16 @@ class OfferBuilder:
         selected = self.select_attributes(hotel_details)
         offer = models.Offer(**selected)
         return offer
+
+# class ChainBuilder:
+#     attributes = ['chain_code', 'name']
+
+#     def select_attributes(self, hotel_details):
+#         chain_code, name = 
+#         return categories
+
+#     def run(self, venue_details, venue, conn, cursor):
+#         category_names = self.select_attributes(venue_details)
+#         categories = self.find_or_create_categories(category_names, conn, cursor)
+#         venue_categories = self.create_venue_categories(venue, categories, conn, cursor)
+#         return venue_categories

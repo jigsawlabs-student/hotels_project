@@ -26,7 +26,7 @@ class RequestAndBuild:
         
         hotel_objs = []
         for i in range(days_out):
-            check_in = date.today() + timedelta(days=i)
+            check_in = date.today() + timedelta(days=23) + timedelta(days=i)
             check_out = check_in + timedelta(days=1)
             print(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d"))
             hotel_details = self.client.request_offers(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d")) # NEEDS ERROR HANDLING IF A HOTEL COMES BACK 400 - LOGGING?            

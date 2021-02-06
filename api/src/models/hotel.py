@@ -48,9 +48,9 @@ class Hotel:
         hotel_dict['offers'] = offers_dicts
         return hotel_dict
 
-    # @classmethod
-    # def find_by_amadeus_id(self, amadeus_id, cursor):
-#     hotels_query = """SELECT * FROM hotels WHERE amadeus_id = %s"""
-#     cursor.execute(hotels_query, (amadeus_id, ))
-#     record = cursor.fetchone()
-#     return db.build_from_record(models.Hotel, record)
+    @classmethod
+    def find_by_amadeus_id(self, amadeus_id, cursor):
+        hotels_query = """SELECT * FROM hotels WHERE amadeus_id = %s"""
+        cursor.execute(hotels_query, (amadeus_id, ))
+        record = cursor.fetchone()
+        return db.build_from_record(models.Hotel, record)

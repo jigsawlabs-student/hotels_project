@@ -1,3 +1,0 @@
-flask
-amadeus
-psycopg2

@@ -1,8 +1,9 @@
 from flask import current_app
 from flask import g
 import psycopg2
+from settings import DB_NAME
 
-conn_dev = psycopg2.connect(database = 'hotels_development')
+conn_dev = psycopg2.connect(database = DB_NAME)
 cursor = conn_dev.cursor()
 
 def get_db():

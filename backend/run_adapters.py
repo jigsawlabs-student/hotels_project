@@ -1,5 +1,6 @@
 import psycopg2
-import pandas
+import os
+import pandas as pd
 from datetime import date, timedelta
 import api.src.models as models
 import api.src.db as db
@@ -7,8 +8,8 @@ import api.src.adapters as adapters
 
 # Create string of hotel ID's to call from API:
 def hotel_ids_str():
-    with open ('hotel_list_prod.csv') as csvfile:
-        df = pandas.read_csv(csvfile, header=0)
+    with open(os.path.join('csv', 'hotel_list_prod.csv')) as csvfile:
+        df = pd.read_csv(csvfile, header=0)
         ids = df.id.to_string(index=False, header=False).split('\n')
         ids_str = ",".join(ids).replace(" ","")
         return ids_str   
@@ -22,11 +23,11 @@ class RequestAndBuild:
         self.hotel_list = hotel_ids_str()
        
     def run(self, days_out):
-        print(self.hotel_list)
+        # print(self.hotel_list)
         
         hotel_objs = []
         for i in range(days_out):
-            check_in = date.today() + timedelta(days=23) + timedelta(days=i)
+            check_in = date.today() + timedelta(days=161) + timedelta(days=i)
             check_out = check_in + timedelta(days=1)
             print(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d"))
             hotel_details = self.client.request_offers(f"{self.hotel_list}", check_in.strftime("%Y-%m-%d"), check_out.strftime("%Y-%m-%d")) # NEEDS ERROR HANDLING IF A HOTEL COMES BACK 400 - LOGGING?            
@@ -37,4 +38,4 @@ class RequestAndBuild:
         return hotel_objs
         
 obj = RequestAndBuild()
-obj.run(90)
+obj.run(1)

@@ -1,0 +1,8 @@
+flask
+amadeus
+psycopg2-binary
+simplejson
+pytest
+requests
+dotenv
+csv
